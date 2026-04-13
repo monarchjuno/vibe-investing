@@ -8,6 +8,10 @@
 
 - Store skills for portfolio construction, capital allocation, sizing, and risk management.
 
+## Structure
+
+- Prefer flat skill folders directly under `skills/portfolio/`.
+
 ## Include Here
 
 - Allocation frameworks

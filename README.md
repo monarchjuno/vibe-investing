@@ -24,22 +24,24 @@ vibe-investing/
 ├── .gitignore
 └── skills/
     ├── AGENTS.md
-    ├── analysis/
+    ├── fundamental-analysis/
+    ├── market-analysis/
     ├── output-formats/
     ├── portfolio/
-    └── research-ops/
+    └── quantitative-analysis/
 ```
 
 ## Skill Categories
 
-- `analysis`: cross-asset analytical capabilities such as fundamental, valuation, and risk analysis
+- `fundamental-analysis`: bottom-up valuation and company or asset analysis skills
+- `market-analysis`: macro, liquidity, sentiment, and market-regime skills
 - `output-formats`: reusable output styles and packaging patterns for investing work
-- `portfolio`: allocation, sizing, rebalancing, risk budgeting
-- `research-ops`: filings, transcripts, peer comps, memo pipelines
+- `portfolio`: allocation, sizing, rebalancing, and risk budgeting
+- `quantitative-analysis`: factor, screening, backtesting, and signal research skills
 
 ## Current Status
 
-- First active skill: `skills/analysis/fundamental-analysis`
+- First active skill: `skills/fundamental-analysis/company-analysis`
 - Folder-level maintenance rules live in `AGENTS.md` files
 
 ## Add a Skill
@@ -47,7 +49,7 @@ vibe-investing/
 Create a new skill as a self-contained folder under the right category:
 
 ```text
-skills/<category>/<skill-name>/
+skills/<top-level-domain>/<skill-name>/
 ├── SKILL.md
 ├── references/   # optional
 ├── scripts/      # optional
@@ -73,11 +75,11 @@ For final artifact generation, use this repo for output style and apply external
 
 ## Recommended Next Skills
 
-1. `analysis/valuation-analysis`
-2. `output-formats/financial-report`
-3. `research-ops/peer-comparison`
+1. `fundamental-analysis/crypto-analysis`
+2. `market-analysis/macro-analysis`
+3. `quantitative-analysis/factor-analysis`
 4. `portfolio/portfolio-construction`
-5. `research-ops/earnings-call-digest`
+5. `output-formats/financial-report`
 
 ## Git
 

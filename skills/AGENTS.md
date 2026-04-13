@@ -10,11 +10,12 @@
 
 ## Rules
 
-- Keep each direct child category focused on one reusable capability domain.
+- Keep each direct child folder under `skills/` focused on a major investing capability such as `fundamental-analysis`, `market-analysis`, `quantitative-analysis`, `portfolio`, or `output-formats`.
+- Keep the structure shallow: prefer `skills/<top-level-domain>/<skill-name>` over deeper category nesting.
 - Keep every skill self-contained in its own folder.
 - Each skill folder must include `SKILL.md`.
 - Add `references/`, `scripts/`, and `assets/` only when needed.
-- Prefer cross-asset skills with internal variants over duplicating nearly identical skills by asset class.
+- Handle asset-class differences inside each skill when possible instead of creating extra nesting layers too early.
 - Treat `output-formats/` as reusable presentation styles or output packaging patterns, not necessarily literal file extensions.
 
 ## Quality Standard
