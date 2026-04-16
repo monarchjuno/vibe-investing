@@ -81,6 +81,10 @@ For final artifact generation, use this repo for output style and apply external
 4. `portfolio/portfolio-construction`
 5. `output-formats/financial-report`
 
+## References
+
+- [virattt/ai-hedge-fund](https://github.com/virattt/ai-hedge-fund): reference source for the investor persona skill adaptation work under `skills/investor-personas/`
+
 ## Git
 
 This repository is initialized as a git repository on the `main` branch. No commit has been created yet.
