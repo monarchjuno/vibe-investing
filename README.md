@@ -1,90 +1,104 @@
 # Vibe Investing
 
-Structured repository for finance and investing skills.
+Open-source repository of finance and investing skills built around the `SKILL.md` format.
 
-It is not just vibe coding anymore. It is vibe investing.
+This project collects reusable investing workflows instead of one-off prompts. The goal is to make research frameworks, market-analysis lenses, portfolio logic, and report formats easier to reuse, compare, and extend.
 
-Harness engineering is not only for vibe coding. It matters for vibe investing too.
+## What This Repository Contains
 
-This repository is a focused collection of investing skills that follow the `SKILL.md`-based skill spec. The goal is to make analytical workflows, reporting patterns, and reusable investing playbooks composable, portable, and easy to evolve.
+- Fundamental-analysis skills for bottom-up business and valuation work
+- Market-analysis skills for regime, liquidity, and macro context
+- Quantitative-research skills for signal design and validation
+- Output-format skills for packaging research into publishable deliverables
+- Investor-persona skills that apply the decision framework of well-known investors
 
-## Purpose
+## Current Skill Set
 
-- Keep investing skills in one consistent repository
-- Organize skills by reusable capability rather than ad hoc folders
-- Stay aligned to the generic skill spec instead of a single host runtime
-- Separate lightweight workflow guidance from deeper references and reusable assets
+### Core Analysis
 
-## Repository Structure
+- `skills/fundamental-analysis/company-analysis`
+- `skills/market-analysis/traditional-market-analysis`
+- `skills/quantitative-analysis/quant-research`
+- `skills/output-formats/financial-report`
+
+### Investor Personas
+
+- `skills/investor-personas/aswath-damodaran`
+- `skills/investor-personas/ben-graham`
+- `skills/investor-personas/bill-ackman`
+- `skills/investor-personas/cathie-wood`
+- `skills/investor-personas/charlie-munger`
+- `skills/investor-personas/michael-burry`
+- `skills/investor-personas/mohnish-pabrai`
+- `skills/investor-personas/nassim-taleb`
+- `skills/investor-personas/peter-lynch`
+- `skills/investor-personas/phil-fisher`
+- `skills/investor-personas/rakesh-jhunjhunwala`
+- `skills/investor-personas/stanley-druckenmiller`
+- `skills/investor-personas/warren-buffett`
+
+## Repository Layout
 
 ```text
 vibe-investing/
 ├── README.md
 ├── AGENTS.md
-├── .gitignore
 └── skills/
     ├── AGENTS.md
     ├── fundamental-analysis/
+    ├── investor-personas/
     ├── market-analysis/
     ├── output-formats/
     ├── portfolio/
     └── quantitative-analysis/
 ```
 
-## Skill Categories
-
-- `fundamental-analysis`: bottom-up valuation and company or asset analysis skills
-- `market-analysis`: macro, liquidity, sentiment, and market-regime skills
-- `output-formats`: reusable output styles and packaging patterns for investing work
-- `portfolio`: allocation, sizing, rebalancing, and risk budgeting
-- `quantitative-analysis`: factor, screening, backtesting, and signal research skills
-
-## Current Status
-
-- First active skill: `skills/fundamental-analysis/company-analysis`
-- Folder-level maintenance rules live in `AGENTS.md` files
-
-## Add a Skill
-
-Create a new skill as a self-contained folder under the right category:
+Each skill lives in its own folder:
 
 ```text
-skills/<top-level-domain>/<skill-name>/
+skills/<category>/<skill-name>/
 ├── SKILL.md
 ├── references/   # optional
 ├── scripts/      # optional
 └── assets/       # optional
 ```
 
-The only required file is `SKILL.md`.
+`SKILL.md` is the only required file.
 
-For final artifact generation, use this repo for output style and apply external file-format skills as needed:
+## Design Principles
 
-- this repository owns report structure and publishable packaging
-- external skills can convert the result into `docx`, `pdf`, `xlsx`, or other file types
-
-## Skill Design Principles
-
-- Keep `SKILL.md` short and action-oriented
-- Put detailed formulas, heuristics, and templates in `references/`
+- Organize skills by reusable capability, not by ad hoc project folders
+- Keep each skill modular, portable, and easy to evolve
+- Keep `SKILL.md` concise and workflow-driven
+- Move detailed formulas, templates, and long guidance into `references/` when needed
 - Add `scripts/` only when deterministic repeated work is worth automating
 - Use lowercase hyphen-case for skill names
-- Use `AGENTS.md` for folder-level maintenance instructions, not extra `README.md` files
-- Prefer external skills for concrete file conversion when a generic tool already exists
-- Keep the core repository aligned with the generic skill spec rather than any single runtime
+- Use `AGENTS.md` for folder-level maintenance rules instead of extra documentation files
 
-## Recommended Next Skills
+## Using This Repository
 
-1. `fundamental-analysis/crypto-analysis`
-2. `market-analysis/macro-analysis`
-3. `quantitative-analysis/factor-analysis`
-4. `portfolio/portfolio-construction`
-5. `output-formats/financial-report`
+This repository is designed for any system or workflow that can consume `SKILL.md`-style skill folders.
+
+Typical usage:
+
+1. Choose the category that matches the task.
+2. Open the relevant `SKILL.md`.
+3. Load any `references/`, `scripts/`, or `assets/` only when needed.
+4. Apply the workflow to the investment question, research task, or report-generation job.
+
+## Contributing
+
+Contributions are welcome if they improve the repository as reusable open-source infrastructure for investing workflows.
+
+When adding or updating a skill:
+
+- Put it under the most appropriate top-level category in `skills/`
+- Keep the structure shallow
+- Prefer small, targeted additions over broad speculative scaffolding
+- Avoid adding extra nested `README.md` files
+- Keep skill instructions generic rather than tied to a single host product
+- Follow any relevant `AGENTS.md` guidance in the directory you are editing
 
 ## References
 
 - [virattt/ai-hedge-fund](https://github.com/virattt/ai-hedge-fund): reference source for the investor persona skill adaptation work under `skills/investor-personas/`
-
-## Git
-
-This repository is initialized as a git repository on the `main` branch. No commit has been created yet.
