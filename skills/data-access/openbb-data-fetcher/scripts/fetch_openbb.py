@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -32,6 +33,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--metadata",
         help="Optional JSON metadata output path.",
+    )
+    parser.add_argument(
+        "--install-if-missing",
+        action="store_true",
+        help="Install openbb with the active Python interpreter if it is missing, then retry.",
     )
     return parser.parse_args()
 
@@ -96,20 +102,48 @@ def write_output(result: Any, output_path: Path) -> dict[str, Any]:
     return metadata
 
 
+def import_openbb(install_if_missing: bool) -> Any:
+    try:
+        from openbb import obb
+
+        return obb
+    except ImportError:
+        if not install_if_missing:
+            print(
+                "OpenBB is not installed in this Python environment. "
+                "Install with: python -m pip install openbb, or rerun with "
+                "--install-if-missing.",
+                file=sys.stderr,
+            )
+            raise SystemExit(2)
+
+    command = [sys.executable, "-m", "pip", "install", "openbb"]
+    completed = subprocess.run(command, text=True)
+    if completed.returncode != 0:
+        print(
+            "OpenBB installation failed. Command attempted: "
+            + " ".join(command),
+            file=sys.stderr,
+        )
+        raise SystemExit(completed.returncode)
+
+    try:
+        from openbb import obb
+
+        return obb
+    except ImportError:
+        print(
+            "OpenBB installation completed, but import still failed in this interpreter.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
+
 def main() -> int:
     args = parse_args()
     params = load_params(args.params)
 
-    try:
-        from openbb import obb
-    except ImportError as exc:
-        print(
-            "OpenBB is not installed in this Python environment. "
-            "Install with: pip install openbb",
-            file=sys.stderr,
-        )
-        return 2
-
+    obb = import_openbb(args.install_if_missing)
     endpoint = resolve_endpoint(obb, args.endpoint)
     result = endpoint(**params)
     metadata = write_output(result, Path(args.output))

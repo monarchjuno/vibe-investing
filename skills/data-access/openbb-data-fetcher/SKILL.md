@@ -14,6 +14,9 @@ Use OpenBB as a standalone data access layer. Retrieve requested data, preserve 
 - Use the OpenBB Python package directly with `from openbb import obb`.
 - Do not use the OpenBB MCP server unless the user explicitly asks for MCP.
 - Prefer official OpenBB endpoints and provider extensions over web scraping.
+- Do not substitute ordinary web search just because OpenBB is not installed; install OpenBB, retry the request, or report the installation blocker.
+- Use web search as a fallback only after OpenBB installation, import, endpoint, provider, or credential setup has failed and the requested task still needs an answer.
+- When using fallback web research, label it clearly as `non-OpenBB fallback data` and cite sources; do not imply it came from OpenBB.
 - Return structured data first: DataFrame, CSV, JSON, or a concise schema/sample when the dataset is large.
 - Keep raw provider fields unless the user asks for a transformed model-ready dataset.
 
@@ -21,11 +24,12 @@ Use OpenBB as a standalone data access layer. Retrieve requested data, preserve 
 
 1. Identify the data domain: equity, ETF, index, crypto, fixed income, options, economics, fundamentals, news, analyst estimates, calendar events, or regulatory filings.
 2. Identify the instrument identifiers, date range, frequency, provider preference, and required fields.
-3. Check whether OpenBB is installed. If not, install into the active project environment only when the user has asked you to run code.
+3. Check whether OpenBB is installed. If it is missing, install it into the active Python environment and retry the same request.
 4. Use the reusable helper when a simple endpoint call is enough:
 
 ```bash
 python skills/data-access/openbb-data-fetcher/scripts/fetch_openbb.py \
+  --install-if-missing \
   --endpoint equity.price.historical \
   --params '{"symbol":"AAPL","start_date":"2024-01-01","provider":"yfinance"}' \
   --output /tmp/aapl_prices.csv
@@ -47,10 +51,23 @@ df = result.to_dataframe()
 ## Installation Guidance
 
 - Official current baseline: `pip install openbb`.
+- When this skill is triggered, treat missing OpenBB as a setup step, not as permission to use generic web search.
+- Prefer `python -m pip install openbb` in the same interpreter that will run the data request.
 - Use `pip install openbb[all]` only when broad provider coverage is needed and installation size is acceptable.
 - For a narrow provider, prefer installing the relevant extension package instead of all extras.
 - OpenBB currently supports Python 3.10+; if installation fails, verify the active Python version and OpenBB docs before changing code.
 - Never commit API keys or credential files.
+- Web browsing is allowed to inspect official OpenBB documentation, provider setup requirements, or to provide fallback data after OpenBB has genuinely failed.
+
+Minimal install-and-retry pattern:
+
+```bash
+python -m pip install openbb
+python skills/data-access/openbb-data-fetcher/scripts/fetch_openbb.py \
+  --endpoint equity.price.historical \
+  --params '{"symbol":"AAPL","start_date":"2024-01-01","provider":"yfinance"}' \
+  --output /tmp/aapl_prices.csv
+```
 
 ## Credentials
 
@@ -125,6 +142,23 @@ data = obb.equity.fundamental.metrics(symbol="AAPL", provider="fmp")
 
 Restart the Python process after adding credentials to `.env` or `user_settings.json`.
 
+## Fallback Policy
+
+OpenBB is the primary path. Before falling back, make a real attempt to:
+
+- Import OpenBB.
+- Install OpenBB into the active Python environment if it is missing.
+- Retry the same endpoint call.
+- Inspect the installed route tree if the endpoint is missing.
+- Try an available no-key provider when credentials are unavailable and it can satisfy the request.
+
+Use web search only after those steps fail or are blocked by environment, package, provider, credential, or route limitations. In the final output, state:
+
+- That OpenBB failed or was unavailable.
+- The failure reason at a practical level.
+- That the returned data is `non-OpenBB fallback data`.
+- The sources, timestamps, and any comparability limits.
+
 ## Endpoint Selection
 
 Use OpenBB's route hierarchy directly:
@@ -174,8 +208,10 @@ For returned values and derived fields, tag numbers as:
 
 ## Failure Handling
 
-- If OpenBB is not installed, report the exact install command and active Python version.
+- If OpenBB is not installed, install it and retry. If installation fails, report the exact install command, active Python version, and failure output.
 - If an endpoint is missing, inspect the installed route tree; OpenBB routes can differ by package version and installed extensions.
 - If the provider returns no data, retry only after checking ticker format, date range, and provider support.
 - If the user requested real-time data, state whether the provider appears delayed or end-of-day.
 - If provider terms, rate limits, or credentials block the request, explain the blocker without inventing substitute data.
+- If OpenBB cannot be installed or the route cannot return the requested dataset, use web fallback only when the task can still be answered responsibly from cited public sources.
+- If fallback data would be unreliable, unavailable, or not comparable to the requested OpenBB dataset, stop with a blocker instead of inventing or over-smoothing the result.
