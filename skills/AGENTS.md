@@ -10,7 +10,7 @@
 
 ## Rules
 
-- Keep each direct child folder under `skills/` focused on a major investing capability such as `fundamental-analysis`, `market-analysis`, `quantitative-analysis`, `portfolio`, or `output-formats`.
+- Keep each direct child folder under `skills/` focused on a major investing capability such as `data-access`, `fundamental-analysis`, `market-analysis`, `quantitative-analysis`, `portfolio`, or `output-formats`.
 - Keep the structure shallow: prefer `skills/<top-level-domain>/<skill-name>` over deeper category nesting.
 - Keep every skill self-contained in its own folder.
 - Each skill folder must include `SKILL.md`.

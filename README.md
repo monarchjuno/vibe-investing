@@ -7,6 +7,7 @@ This project collects reusable investing workflows instead of one-off prompts. T
 ## What This Repository Contains
 
 - Fundamental-analysis skills for bottom-up business and valuation work
+- Data-access skills for retrieving, validating, and preparing financial data
 - Market-analysis skills for regime, liquidity, and macro context
 - Quantitative-research skills for signal design and validation
 - Output-format skills for packaging research into publishable deliverables
@@ -17,6 +18,7 @@ This project collects reusable investing workflows instead of one-off prompts. T
 ### Core Analysis
 
 - `skills/fundamental-analysis/company-analysis`
+- `skills/data-access/openbb-data-fetcher`
 - `skills/market-analysis/traditional-market-analysis`
 - `skills/quantitative-analysis/quant-research`
 - `skills/output-formats/financial-report`
@@ -45,6 +47,7 @@ vibe-investing/
 ├── AGENTS.md
 └── skills/
     ├── AGENTS.md
+    ├── data-access/
     ├── fundamental-analysis/
     ├── investor-personas/
     ├── market-analysis/
