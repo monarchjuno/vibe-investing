@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +39,11 @@ def parse_args() -> argparse.Namespace:
         "--install-if-missing",
         action="store_true",
         help="Install openbb with the active Python interpreter if it is missing, then retry.",
+    )
+    parser.add_argument(
+        "--no-provider-validation-retry",
+        action="store_true",
+        help="Disable one automatic retry when OpenBB says the selected provider is invalid.",
     )
     return parser.parse_args()
 
@@ -102,6 +108,42 @@ def write_output(result: Any, output_path: Path) -> dict[str, Any]:
     return metadata
 
 
+def provider_hint_from_error(error: Exception) -> str | None:
+    message = str(error)
+    if "provider" not in message or "Input should be" not in message:
+        return None
+    providers = re.findall(r"Input should be '([^']+)'", message)
+    if len(providers) == 1:
+        return providers[0]
+    return None
+
+
+def call_endpoint(endpoint: Any, params: dict[str, Any], retry_provider_validation: bool) -> tuple[Any, dict[str, Any]]:
+    try:
+        return endpoint(**params), {}
+    except Exception as exc:
+        provider_hint = provider_hint_from_error(exc)
+        if (
+            retry_provider_validation
+            and provider_hint
+            and params.get("provider") != provider_hint
+        ):
+            retried_params = dict(params)
+            old_provider = retried_params.get("provider")
+            retried_params["provider"] = provider_hint
+            result = endpoint(**retried_params)
+            return result, {
+                "provider_retry": {
+                    "from": old_provider,
+                    "to": provider_hint,
+                    "reason": "OpenBB provider validation error",
+                    "first_error": str(exc),
+                },
+                "params_used": retried_params,
+            }
+        raise
+
+
 def import_openbb(install_if_missing: bool) -> Any:
     try:
         from openbb import obb
@@ -145,9 +187,14 @@ def main() -> int:
 
     obb = import_openbb(args.install_if_missing)
     endpoint = resolve_endpoint(obb, args.endpoint)
-    result = endpoint(**params)
+    result, call_metadata = call_endpoint(
+        endpoint,
+        params,
+        retry_provider_validation=not args.no_provider_validation_retry,
+    )
     metadata = write_output(result, Path(args.output))
     metadata.update({"endpoint": args.endpoint, "params": params})
+    metadata.update(call_metadata)
 
     if args.metadata:
         metadata_path = Path(args.metadata)

@@ -13,6 +13,7 @@ Use OpenBB as a standalone data access layer. Retrieve requested data, preserve 
 
 - Use the OpenBB Python package directly with `from openbb import obb`.
 - Do not use the OpenBB MCP server unless the user explicitly asks for MCP.
+- Prefer the bundled `scripts/fetch_openbb.py` helper for simple endpoint calls instead of ad hoc shell heredocs.
 - Prefer official OpenBB endpoints and provider extensions over web scraping.
 - Do not substitute ordinary web search just because OpenBB is not installed; install OpenBB, retry the request, or report the installation blocker.
 - Use web search as a fallback only after OpenBB installation, import, endpoint, provider, or credential setup has failed and the requested task still needs an answer.
@@ -25,7 +26,7 @@ Use OpenBB as a standalone data access layer. Retrieve requested data, preserve 
 1. Identify the data domain: equity, ETF, index, crypto, fixed income, options, economics, fundamentals, news, analyst estimates, calendar events, or regulatory filings.
 2. Identify the instrument identifiers, date range, frequency, provider preference, and required fields.
 3. Check whether OpenBB is installed. If it is missing, install it into the active Python environment and retry the same request.
-4. Use the reusable helper when a simple endpoint call is enough:
+4. Use the reusable helper when a simple endpoint call is enough. Do not force `provider="yfinance"` unless that endpoint supports it:
 
 ```bash
 python skills/data-access/openbb-data-fetcher/scripts/fetch_openbb.py \
@@ -46,6 +47,16 @@ result = obb.equity.price.historical(
     provider="yfinance",
 )
 df = result.to_dataframe()
+```
+
+For provider-specific fundamentals such as segment or geography revenue, do not assume `yfinance` works:
+
+```bash
+python skills/data-access/openbb-data-fetcher/scripts/fetch_openbb.py \
+  --install-if-missing \
+  --endpoint equity.fundamental.revenue_per_segment \
+  --params '{"symbol":"NVDA","provider":"fmp"}' \
+  --output /tmp/nvda_segment_revenue.csv
 ```
 
 ## Installation Guidance
@@ -149,6 +160,7 @@ OpenBB is the primary path. Before falling back, make a real attempt to:
 - Import OpenBB.
 - Install OpenBB into the active Python environment if it is missing.
 - Retry the same endpoint call.
+- If validation says the provider is invalid and names an allowed provider, retry with that provider.
 - Inspect the installed route tree if the endpoint is missing.
 - Try an available no-key provider when credentials are unavailable and it can satisfy the request.
 
@@ -178,6 +190,15 @@ dir(obb.equity)
 dir(obb.equity.price)
 help(obb.equity.price.historical)
 ```
+
+## Provider Selection
+
+- Treat provider compatibility as endpoint-specific. A provider that works for prices may not work for fundamentals, estimates, segments, filings, or macro data.
+- Do not use `yfinance` as a universal fallback. It is often useful for prices and some estimates, but many fundamental routes require providers such as `fmp`.
+- If OpenBB raises a validation error like `provider -> input: yfinance -> Input should be 'fmp'`, retry the same endpoint with `provider="fmp"`.
+- If the corrected provider requires credentials, check environment variables and `user_settings.json` before falling back.
+- For `revenue_per_segment` and `revenue_per_geography`, expect `fmp` unless the installed OpenBB route says otherwise.
+- Record provider changes in the output so the user can see that the request started with one provider and succeeded or failed with another.
 
 ## Output Contract
 
@@ -210,6 +231,7 @@ For returned values and derived fields, tag numbers as:
 
 - If OpenBB is not installed, install it and retry. If installation fails, report the exact install command, active Python version, and failure output.
 - If an endpoint is missing, inspect the installed route tree; OpenBB routes can differ by package version and installed extensions.
+- If a provider validation error names an allowed provider, retry once with that provider before giving up or falling back.
 - If the provider returns no data, retry only after checking ticker format, date range, and provider support.
 - If the user requested real-time data, state whether the provider appears delayed or end-of-day.
 - If provider terms, rate limits, or credentials block the request, explain the blocker without inventing substitute data.
