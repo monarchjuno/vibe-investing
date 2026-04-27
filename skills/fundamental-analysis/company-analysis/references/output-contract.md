@@ -10,7 +10,6 @@
 
 ## Language and formatting rules
 
-- Write the final answer in English only.
 - Do not use markdown.
 - Do not use row-column tables.
 - Optimize for mobile readability with plain text blocks.

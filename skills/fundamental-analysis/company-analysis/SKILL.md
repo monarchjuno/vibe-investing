@@ -1,6 +1,6 @@
 ---
 name: company-analysis
-description: Automatically analyze a company or company-related finance situation from a short user prompt such as a company name, "analyze [company]," M&A, LBO, IPO, debt, credit, or risk requests. Use when an agent must infer the correct valuation and finance framework without asking follow-up questions, begin from market-implied expectations instead of immediate fair value, run Reverse DCF before Forward DCF for listed companies, perform web-verified data gathering and deal-radar checks, defend against hallucinations with explicit data tags and uncertainty statements, and produce an English plain-text output with no markdown and no row-column tables.
+description: Automatically analyze a company or company-related finance situation from a short user prompt such as a company name, "analyze [company]," M&A, LBO, IPO, debt, credit, or risk requests. Use when an agent must infer the correct valuation and finance framework without asking follow-up questions, begin from market-implied expectations instead of immediate fair value, run Reverse DCF before Forward DCF for listed companies, perform web-verified data gathering and deal-radar checks, defend against hallucinations with explicit data tags and uncertainty statements, and produce a plain-text output with no markdown and no row-column tables.
 ---
 
 # Company Analysis
@@ -62,7 +62,6 @@ Use this skill to produce an IB-style investment analysis from minimal user inpu
 
 ### 7. Output in the required format
 
-- Write the final answer in English only.
 - Do not use markdown.
 - Do not use row-column tables.
 - Use the required plain-text block order defined in `references/output-contract.md`.
